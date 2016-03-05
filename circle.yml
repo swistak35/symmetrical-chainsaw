@@ -1,22 +1,28 @@
 machine:
   ghc:
     version: 7.10.2
+  node:
+    version: 5.1.0
 
 dependencies:
   cache_directories:
+    # Frontend app javascript modules
     - "frontend/node_modules"
+
+    # Backend app haskell modules
     - "~/.stack"
 
   override:
+    # Build haskell dependencies
     - wget -q -O- https://s3.amazonaws.com/download.fpcomplete.com/ubuntu/fpco.key | sudo apt-key add -
     - echo 'deb http://download.fpcomplete.com/ubuntu/precise stable main' | sudo tee /etc/apt/sources.list.d/fpco.list
     - sudo apt-get update && sudo apt-get install stack -y
     - cd backend && stack setup && stack build --test --only-dependencies
 
-  # pre:
-    # - cd frontend && npm install
+    # Build javascript dependencies
+    - cd frontend && npm install
 
 test:
   post:
     - cd backend && PGUSER=ubuntu PGDATABASE=circle_test stack test
-    # - cd frontend && npm run test
+    - cd frontend && npm run test
