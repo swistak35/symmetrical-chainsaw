@@ -5,6 +5,7 @@ machine:
 dependencies:
   cache_directories:
     - "frontend/node_modules"
+    - "~/.stack"
 
   override:
     - wget -q -O- https://s3.amazonaws.com/download.fpcomplete.com/ubuntu/fpco.key | sudo apt-key add -
