@@ -17,5 +17,5 @@ dependencies:
 
 test:
   post:
-    - cd backend stack test
+    - cd backend && PGUSER=ubuntu PGDATABASE=circle_test stack test
     # - cd frontend && npm run test

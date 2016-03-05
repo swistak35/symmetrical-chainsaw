@@ -1,2 +1,2 @@
 database:
-  database: symmetrical_chainsaw_db_test
+  database: "_env:PGDATABASE:symmetrical_chainsaw_db_test"
