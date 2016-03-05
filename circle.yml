@@ -1,0 +1,7 @@
+dependencies:
+  pre:
+    - cd frontend && npm install
+
+test:
+  post:
+    - cd frontend && npm run test
