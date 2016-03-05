@@ -7,8 +7,8 @@ dependencies:
     - "frontend/node_modules"
 
   pre:
+    - cd backend && cabal install && cabal build
     - cd frontend && npm install
-    - cd backend && cabal build
 
 test:
   post:
