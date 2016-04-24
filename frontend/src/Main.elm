@@ -24,11 +24,18 @@ main = app.html
 port swap : Signal.Signal Bool
 
 -- MODEL
-type alias Model = Int
+type alias Model =
+  { links : List Link
+  }
+
+type alias Link =
+  { name : String
+  , url : String
+  }
 
 -- INIT
 init =
-  (0, Effects.none)
+  ({ links = [] }, Effects.none)
 
 -- VIEW
 -- Examples of:
@@ -38,10 +45,11 @@ init =
 view address model =
   div
     [ class "mt-palette-accent", style styles.wrapper ]
-    [ hello model
+    [ hello (List.length model.links)
     ,  p [ style [( "color", "#FFF")] ] [ text ( "Elm Webpack Starter" ) ]
     ,  button [ class "mt-button-sm", onClick address Increment ] [ text "FTW!" ]
     ,  img [ src "img/elm.jpg", style [( "display", "block"), ( "margin", "10px auto")] ] []
+    ,  ul [] (List.map (\x -> li [] [ a [ href x.url ] [ text x.name ] ]) model.links)
     ]
 
 
@@ -53,7 +61,7 @@ type Action
 update action model =
   case action of
     NoOp -> ( model, Effects.none )
-    Increment -> ( model + 1, Effects.none )
+    Increment -> ( { links = model.links ++ [{ name = "foo", url = "bar"}] }, Effects.none )
 
 
 -- CSS STYLES
