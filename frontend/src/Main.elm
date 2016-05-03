@@ -84,11 +84,19 @@ viewLink address link =
     -- [ img [ src "images/default.png", alt "", class "circle" ] []
     -- , span [ class "title" ] [ text "Title" ]
     , a [ class "title", href link.url ] [ text link.name ]
-    , p [] [ text "First line" ]
-    , div [ class "secondary-content" ]
+    , p []
+      [ text "Short description of the link"
+      , br [] []
+      , text "tags: google, search engine, corporation"
+      , br [] []
+      , text link.url
+      ]
+    , div [ class "secondary-content", style [("text-align", "right")] ]
       [ a [ href "#!/grade"  ] [ i [ class "material-icons" ] [ text "grade"  ] ]
       , a [ href "#!/edit"   ] [ i [ class "material-icons" ] [ text "edit"   ] ]
       , a [ href "#!/delete" ] [ i [ class "material-icons" ] [ text "delete" ] ]
+      , br [] []
+      , text "2016.04.02, 13:15"
       ]
     ]
 
