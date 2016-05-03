@@ -9,6 +9,7 @@ import StartApp
 
 -- component import example
 import Components.Hello exposing ( hello )
+import Components.NewLink
 
 -- APP KICK OFF!
 app = StartApp.start
@@ -26,7 +27,7 @@ port swap : Signal.Signal Bool
 -- MODEL
 type alias Model =
   { links : List Link
-  , newLink : Link
+  , newLink : Components.NewLink.Model
   }
 
 type alias Link =
@@ -38,21 +39,27 @@ emptyLink = { name = "", url = "" }
 
 -- INIT
 init =
-  ({ links = [], newLink = emptyLink }, Effects.none)
+    let (newLinkModel, newLinkFx) = Components.NewLink.init
+    in ({ links = [], newLink = newLinkModel }, Effects.batch [ newLinkFx ])
 
 -- VIEW
 -- Examples of:
 -- 1)  an externally defined component ('hello', takes 'model' as arg)
 -- 2a) styling through CSS classes (external stylesheet)
 -- 2b) styling using inline style attribute (two variants)
+viewNewLink address model = 
+  let context =
+        Components.NewLink.Context
+        (Signal.forwardTo address Modify)
+        (Signal.forwardTo address (always Submit))
+  in Components.NewLink.viewWithSubmitAction context model
+
 view address model =
   div
     [ class "mt-palette-accent", style styles.wrapper ]
     [ hello (List.length model.links)
+    ,  viewNewLink address model.newLink
     ,  p [ style [( "color", "#FFF")] ] [ text ( "Elm Webpack Starter" ) ]
-    ,  input [ value model.newLink.name, on "input" targetValue (Signal.message address << UpdateName), style [("color", "#000")] ] []
-    ,  input [ value model.newLink.url, on "input" targetValue (Signal.message address << UpdateUrl), style [("color", "#000")] ] []
-    ,  button [ class "mt-button-sm", onClick address Increment ] [ text "FTW!" ]
     ,  img [ src "img/elm.jpg", style [( "display", "block"), ( "margin", "10px auto")] ] []
     ,  ul [] (List.map (\x -> li [] [ a [ href x.url ] [ text x.name ] ]) model.links)
     ]
@@ -62,19 +69,20 @@ view address model =
 type Action 
   = NoOp
   | Increment
-  | UpdateName String
-  | UpdateUrl String
+  | Modify Components.NewLink.Action
+  | Submit
 
 update action model =
   case action of
     NoOp -> ( model, Effects.none )
-    Increment -> ( { links = model.links ++ [{ name = model.newLink.name, url = model.newLink.url}], newLink = model.newLink }, Effects.none )
-    UpdateName newName -> 
-      let newLink' = model.newLink
-      in ( { model | newLink = { newLink' | name = newName }}, Effects.none)
-    UpdateUrl newUrl -> 
-      let newLink' = model.newLink
-      in ( { model | newLink = { newLink' | url = newUrl }}, Effects.none)
+    Increment -> ( model, Effects.none )
+    Modify a ->
+      let ( newLink', _ ) = Components.NewLink.update a model.newLink
+      in ( { model | newLink = newLink' }, Effects.none )
+    Submit -> 
+      let newModel = { model | links = model.links ++ [{ name = model.newLink.name, url = model.newLink.url }]}
+      in ( newModel, Effects.none )
+    -- Increment -> ( { links = model.links ++ [{ name = model.newLink.name, url = model.newLink.url}], newLink = model.newLink }, Effects.none )
 
 
 -- CSS STYLES
