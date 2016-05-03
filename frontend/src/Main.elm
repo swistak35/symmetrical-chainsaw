@@ -56,37 +56,39 @@ viewNewLink address model =
 
 view address model =
   div []
-    [ nav [] [
-        div [ class "nav-wrapper" ]
-          [ a [ href "#", class "brand-logo right" ] [ text "Symmetrical Chainsaw" ]
-          , ul [ id "nav-mobile", class "left hide-on-med-and-down"]
-            [ li [] [ a [ href "#/links" ] [ text "Links" ] ]
-            , li [] [ a [ href "#/"      ] [ text "Other" ] ]
-            ]
-          ]
-        ]
+    [ viewNavbar address model
     , div [ class "row" ]
       [ div [ class "col s6" ]
         [ viewNewLink address model.newLink
         ]
       ]
     , div [ class "row" ]
-      [ ul [ class "collection" ] (List.map (\x -> li [ class "collection-item avatar" ]
-        [ i [ class "material-icons circle" ] [ text "folder" ]
-        -- [ img [ src "images/default.png", alt "", class "circle" ] []
-        -- , span [ class "title" ] [ text "Title" ]
-        , a [ class "title", href x.url ] [ text x.name ]
-        , p [] [ text "First line" ]
-        , a [ href "#!", class "secondary-content" ] [ i [ class "material-icons" ] [ text "grade" ] ]
-        ]) model.links)
+      [ ul [ class "collection" ] (List.map (viewLink address) model.links)
       ]
     ]
-    -- [ hello (List.length model.links)
-    -- ,  viewNewLink address model.newLink
-    -- ,  p [ style [( "color", "#FFF")] ] [ text ( "Elm Webpack Starter" ) ]
-    -- ,  img [ src "img/elm.jpg", style [( "display", "block"), ( "margin", "10px auto")] ] []
-    -- ,  ul [] (List.map (\x -> li [] [ a [ href x.url ] [ text x.name ] ]) model.links)
-    -- ]
+
+viewNavbar address model =
+  nav [] [
+    div [ class "nav-wrapper" ]
+      [ a [ href "#", class "brand-logo right" ] [ text "Symmetrical Chainsaw" ]
+      , ul [ id "nav-mobile", class "left hide-on-med-and-down"]
+        [ li [] [ a [ href "#/links" ] [ text "Links" ] ]
+        , li [] [ a [ href "#/"      ] [ text "Other" ] ]
+        ]
+      ]
+    ]
+
+viewLink address link =
+  li [ class "collection-item avatar" ]
+    [ i [ class "material-icons circle" ] [ text "folder" ]
+    -- [ img [ src "images/default.png", alt "", class "circle" ] []
+    -- , span [ class "title" ] [ text "Title" ]
+    , a [ class "title", href link.url ] [ text link.name ]
+    , p [] [ text "First line" ]
+    , a [ href "#!", class "secondary-content" ] [ i [ class "material-icons" ] [ text "grade" ] ]
+    ]
+
+
 
 
 -- UPDATE
@@ -106,16 +108,3 @@ update action model =
     Submit -> 
       let newModel = { model | links = model.links ++ [{ name = model.newLink.name, url = model.newLink.url }]}
       in ( newModel, Effects.none )
-    -- Increment -> ( { links = model.links ++ [{ name = model.newLink.name, url = model.newLink.url}], newLink = model.newLink }, Effects.none )
-
-
--- CSS STYLES
-styles =
-  {
-    wrapper =
-      [ ( "padding-top", "10px" )
-      , ( "padding-bottom", "20px" )
-      , ( "text-align", "center" )
-      ]
-  }
-  
