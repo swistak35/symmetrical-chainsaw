@@ -51,6 +51,7 @@ view address model =
     [ hello (List.length model.links)
     ,  p [ style [( "color", "#FFF")] ] [ text ( "Elm Webpack Starter" ) ]
     ,  input [ value model.newLink.name, on "input" targetValue (Signal.message address << UpdateName), style [("color", "#000")] ] []
+    ,  input [ value model.newLink.url, on "input" targetValue (Signal.message address << UpdateUrl), style [("color", "#000")] ] []
     ,  button [ class "mt-button-sm", onClick address Increment ] [ text "FTW!" ]
     ,  img [ src "img/elm.jpg", style [( "display", "block"), ( "margin", "10px auto")] ] []
     ,  ul [] (List.map (\x -> li [] [ a [ href x.url ] [ text x.name ] ]) model.links)
@@ -62,14 +63,18 @@ type Action
   = NoOp
   | Increment
   | UpdateName String
+  | UpdateUrl String
 
 update action model =
   case action of
     NoOp -> ( model, Effects.none )
-    Increment -> ( { links = model.links ++ [{ name = model.newLink.name, url = "bar"}], newLink = model.newLink }, Effects.none )
+    Increment -> ( { links = model.links ++ [{ name = model.newLink.name, url = model.newLink.url}], newLink = model.newLink }, Effects.none )
     UpdateName newName -> 
       let newLink' = model.newLink
       in ( { model | newLink = { newLink' | name = newName }}, Effects.none)
+    UpdateUrl newUrl -> 
+      let newLink' = model.newLink
+      in ( { model | newLink = { newLink' | url = newUrl }}, Effects.none)
 
 
 -- CSS STYLES
