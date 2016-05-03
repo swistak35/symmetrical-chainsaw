@@ -5,27 +5,6 @@ import Html.Attributes exposing (..)
 import Html.Events exposing ( onClick, targetValue, on )
 import Effects exposing (Effects)
 
--- official 'Elm Architecture' package
--- https://github.com/evancz/start-app
--- import StartApp
-
--- component import example
--- import Components.Hello exposing ( hello )
-
--- APP KICK OFF!
--- app = StartApp.start
---   { init = init
---   , update = update
---   , view = view
---   , inputs = [ Signal.map (always NoOp) swap]
---   }
-
--- main = app.html
-
--- HOT-SWAPPING
--- port swap : Signal.Signal Bool
-
--- MODEL
 type alias Model =
   { name : String
   , url  : String
@@ -36,14 +15,8 @@ emptyModel =
   , url  = ""
   }
 
--- INIT
 init = (emptyModel, Effects.none)
 
--- VIEW
--- Examples of:
--- 1)  an externally defined component ('hello', takes 'model' as arg)
--- 2a) styling through CSS classes (external stylesheet)
--- 2b) styling using inline style attribute (two variants)
 view address model =
   div
     [ class "mt-palette-accent" ]
@@ -54,16 +27,37 @@ view address model =
 
 type alias Context =
   { actions : Signal.Address Action
-  , submit : Signal.Address ()
+  , submit  : Signal.Address ()
   }
 
 viewWithSubmitAction context model =
-  div
-    [ class "mt-palette-accent" ]
-    [  input [ value model.name, on "input" targetValue (Signal.message context.actions << UpdateName), style [("color", "#000")] ] []
-    ,  input [ value model.url, on "input" targetValue (Signal.message context.actions << UpdateUrl), style [("color", "#000")] ] []
-    ,  button [ class "mt-button-sm", onClick context.submit () ] [ text "Add" ]
+  Html.form [ class "col s12" ]
+    [ div [ class "row" ]
+      [ div [ class "input-field col s12" ]
+        [ input [ value model.name, class "validate", placeholder "Name", id "link_name", on "input" targetValue (Signal.message context.actions << UpdateName) ] []
+        -- , label [ for "link_name" ] [ text "Name of the bookmark" ]
+        ]
+      ]
+    , div [ class "row" ]
+      [ div [ class "input-field col s12" ]
+        [ input [ value model.url, class "validate", placeholder "URL", id "link_url", on "input" targetValue (Signal.message context.actions << UpdateUrl) ] []
+        -- , label [ for "link_url" ] [ text "URL of the bookmark" ]
+        ]
+      ]
+    , div [ class "row" ]
+      [ div [ class "col s3 offset-s9"]
+        [ button [ class "waves-effect waves-light btn", onClick context.submit () ] [ text "Add" ]
+        ]
+      ]
     ]
+
+-- viewWithSubmitAction context model =
+--   div
+--     [ class "mt-palette-accent" ]
+--     [  input [ value model.name, on "input" targetValue (Signal.message context.actions << UpdateName), style [("color", "#000")] ] []
+--     ,  input [ value model.url, on "input" targetValue (Signal.message context.actions << UpdateUrl), style [("color", "#000")] ] []
+--     ,  button [ class "mt-button-sm", onClick context.submit () ] [ text "Add" ]
+--     ]
 
 -- UPDATE
 type Action 

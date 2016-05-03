@@ -55,14 +55,38 @@ viewNewLink address model =
   in Components.NewLink.viewWithSubmitAction context model
 
 view address model =
-  div
-    [ class "mt-palette-accent", style styles.wrapper ]
-    [ hello (List.length model.links)
-    ,  viewNewLink address model.newLink
-    ,  p [ style [( "color", "#FFF")] ] [ text ( "Elm Webpack Starter" ) ]
-    ,  img [ src "img/elm.jpg", style [( "display", "block"), ( "margin", "10px auto")] ] []
-    ,  ul [] (List.map (\x -> li [] [ a [ href x.url ] [ text x.name ] ]) model.links)
+  div []
+    [ nav [] [
+        div [ class "nav-wrapper" ]
+          [ a [ href "#", class "brand-logo right" ] [ text "Symmetrical Chainsaw" ]
+          , ul [ id "nav-mobile", class "left hide-on-med-and-down"]
+            [ li [] [ a [ href "#/links" ] [ text "Links" ] ]
+            , li [] [ a [ href "#/"      ] [ text "Other" ] ]
+            ]
+          ]
+        ]
+    , div [ class "row" ]
+      [ div [ class "col s6" ]
+        [ viewNewLink address model.newLink
+        ]
+      ]
+    , div [ class "row" ]
+      [ ul [ class "collection" ] (List.map (\x -> li [ class "collection-item avatar" ]
+        [ i [ class "material-icons circle" ] [ text "folder" ]
+        -- [ img [ src "images/default.png", alt "", class "circle" ] []
+        -- , span [ class "title" ] [ text "Title" ]
+        , a [ class "title", href x.url ] [ text x.name ]
+        , p [] [ text "First line" ]
+        , a [ href "#!", class "secondary-content" ] [ i [ class "material-icons" ] [ text "grade" ] ]
+        ]) model.links)
+      ]
     ]
+    -- [ hello (List.length model.links)
+    -- ,  viewNewLink address model.newLink
+    -- ,  p [ style [( "color", "#FFF")] ] [ text ( "Elm Webpack Starter" ) ]
+    -- ,  img [ src "img/elm.jpg", style [( "display", "block"), ( "margin", "10px auto")] ] []
+    -- ,  ul [] (List.map (\x -> li [] [ a [ href x.url ] [ text x.name ] ]) model.links)
+    -- ]
 
 
 -- UPDATE
