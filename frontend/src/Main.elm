@@ -1,6 +1,6 @@
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing ( onClick )
+import Html.Events exposing ( onClick, targetValue, on )
 import Effects exposing (Effects)
 
 -- official 'Elm Architecture' package
@@ -26,6 +26,7 @@ port swap : Signal.Signal Bool
 -- MODEL
 type alias Model =
   { links : List Link
+  , newLink : Link
   }
 
 type alias Link =
@@ -33,9 +34,11 @@ type alias Link =
   , url : String
   }
 
+emptyLink = { name = "", url = "" }
+
 -- INIT
 init =
-  ({ links = [] }, Effects.none)
+  ({ links = [], newLink = emptyLink }, Effects.none)
 
 -- VIEW
 -- Examples of:
@@ -47,6 +50,7 @@ view address model =
     [ class "mt-palette-accent", style styles.wrapper ]
     [ hello (List.length model.links)
     ,  p [ style [( "color", "#FFF")] ] [ text ( "Elm Webpack Starter" ) ]
+    ,  input [ value model.newLink.name, on "input" targetValue (Signal.message address << UpdateName), style [("color", "#000")] ] []
     ,  button [ class "mt-button-sm", onClick address Increment ] [ text "FTW!" ]
     ,  img [ src "img/elm.jpg", style [( "display", "block"), ( "margin", "10px auto")] ] []
     ,  ul [] (List.map (\x -> li [] [ a [ href x.url ] [ text x.name ] ]) model.links)
@@ -57,11 +61,15 @@ view address model =
 type Action 
   = NoOp
   | Increment
+  | UpdateName String
 
 update action model =
   case action of
     NoOp -> ( model, Effects.none )
-    Increment -> ( { links = model.links ++ [{ name = "foo", url = "bar"}] }, Effects.none )
+    Increment -> ( { links = model.links ++ [{ name = model.newLink.name, url = "bar"}], newLink = model.newLink }, Effects.none )
+    UpdateName newName -> 
+      let newLink' = model.newLink
+      in ( { model | newLink = { newLink' | name = newName }}, Effects.none)
 
 
 -- CSS STYLES
