@@ -85,7 +85,11 @@ viewLink address link =
     -- , span [ class "title" ] [ text "Title" ]
     , a [ class "title", href link.url ] [ text link.name ]
     , p [] [ text "First line" ]
-    , a [ href "#!", class "secondary-content" ] [ i [ class "material-icons" ] [ text "grade" ] ]
+    , div [ class "secondary-content" ]
+      [ a [ href "#!/grade"  ] [ i [ class "material-icons" ] [ text "grade"  ] ]
+      , a [ href "#!/edit"   ] [ i [ class "material-icons" ] [ text "edit"   ] ]
+      , a [ href "#!/delete" ] [ i [ class "material-icons" ] [ text "delete" ] ]
+      ]
     ]
 
 
