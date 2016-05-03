@@ -2,6 +2,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing ( onClick, targetValue, on )
 import Effects exposing (Effects)
+import String
 
 -- official 'Elm Architecture' package
 -- https://github.com/evancz/start-app
@@ -10,6 +11,8 @@ import StartApp
 -- component import example
 import Components.Hello exposing ( hello )
 import Components.NewLink
+
+
 
 -- APP KICK OFF!
 app = StartApp.start
@@ -33,9 +36,10 @@ type alias Model =
 type alias Link =
   { name : String
   , url : String
+  , tags : List String
   }
 
-emptyLink = { name = "", url = "" }
+emptyLink = { name = "", url = "", tags = [] }
 
 -- INIT
 init =
@@ -87,7 +91,7 @@ viewLink address link =
     , p []
       [ text "Short description of the link"
       , br [] []
-      , text "tags: google, search engine, corporation"
+      , text (String.append "tags: " (String.join ", " link.tags))
       , br [] []
       , text link.url
       ]
@@ -118,5 +122,5 @@ update action model =
       let ( newLink', _ ) = Components.NewLink.update a model.newLink
       in ( { model | newLink = newLink' }, Effects.none )
     Submit -> 
-      let newModel = { model | links = model.links ++ [{ name = model.newLink.name, url = model.newLink.url }]}
+      let newModel = { model | links = model.links ++ [{ name = model.newLink.name, url = model.newLink.url, tags = model.newLink.tags }]}
       in ( newModel, Effects.none )
